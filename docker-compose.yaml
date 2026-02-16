@@ -1,0 +1,33 @@
+services: # контейнеры с которыми мы работаем
+  api:
+   image: test-api # образа нет в docker hub, значит вводим build
+   build: # показывает, где взять докер файл для образа
+     context: . # Докер файл лежит прямо в папке
+     dockerfile: Dockerfile
+   ports:
+     - 8000:8000
+   container_name: shop-api-app
+   depends_on: # прописывание зависимостей
+      db: # backend зависит от базы данных
+       condition: service_healthy # Условие при котором можно запускать наш контейнер backend
+   restart: on-failure
+   volumes:
+    - ./app:/src/app
+  db: # База данных
+    image: postgres:18-alpine # Откуда мы берём данные
+    container_name: shop-api-db
+    ports:
+      - 5432:${DB_PORT}
+    environment: # Переменные окружения в нашем случае берутся из файла .env
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    healthcheck: # Проверка работоспособности контейнера
+      test: ["CMD-SHELL","pg_isready -d $$POSTGRES_DB -U $$POSTGRES_USER"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes: # создаём тома(сохранение информации)
+      - postgres-data18:/var/lib/postgresql
+volumes: # создаём тома(сохранение информации)
+  postgres-data18:
