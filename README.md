@@ -79,3 +79,21 @@ json
   ]
 }
 
+Для того чтобы запустить проект(На Windows):
+1) Клонируйте репозиторий в папку, написав в терминал
+git clone https://github.com/KaystroAnton/Test_Rigkov_Alexander.git
+2) Перейдите в эту папку, сделав её корневой для проекта
+cd ./Test_Rigkov_Alexander
+3) Создайте файл .env в корневой папке и впишите туда переменные окружения
+IP = 127.0.0.1
+PORT = 8000
+DATABASE = postgresql+asyncpg
+DB_USER = 
+DB_PASSWORD = 
+DB_NAME = 
+DB_DOMEN_NAME = 
+DB_PORT = 5432
+5) Запустите Docker Desktop и напишите команду docker-compose up --build
+Приложение запуститься в контейнерах и будет готова к работе
+Далее можно запускать приложение с помощью команды
+docker-compose up
