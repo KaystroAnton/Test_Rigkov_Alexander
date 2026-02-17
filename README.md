@@ -88,12 +88,12 @@ cd ./Test_Rigkov_Alexander
 IP = 127.0.0.1
 PORT = 8000
 DATABASE = postgresql+asyncpg
-DB_USER = 
-DB_PASSWORD = 
-DB_NAME = 
-DB_DOMEN_NAME = 
+DB_USER =
+DB_PASSWORD =
+DB_NAME =
+DB_DOMEN_NAME =
 DB_PORT = 5432
-5) Запустите Docker Desktop и напишите команду docker-compose up --build
-Приложение запуститься в контейнерах и будет готова к работе
+4) Запустите Docker Desktop и напишите команду docker-compose up --build
+Приложение запуститься в контейнерах и будет готово к работе
 Далее можно запускать приложение с помощью команды
 docker-compose up
