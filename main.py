@@ -5,20 +5,14 @@ from fastapi import FastAPI
 from contextlib import asynccontextmanager
 import uvicorn
 
-from database import create_tables, delete_tables
+from database import reload_db
 from router import routers
 
 
-# Удаление и создание таблиц при запуске приложения
-async  def reload_db():
-    await delete_tables()
-    print("Таблицы удалены")
-    await create_tables()
-    print("Таблицы созданы")
 
 @asynccontextmanager
 async  def lifespan(app: FastAPI):
-    #await reload_db() # Применить при первом запуске
+    await reload_db()
     yield
     print("Выключение")
 

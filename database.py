@@ -5,7 +5,7 @@ from email.policy import default
 import asyncpg
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from sqlalchemy.orm import declarative_base, Mapped, mapped_column, relationship
-from sqlalchemy import ForeignKey,Float
+from sqlalchemy import ForeignKey,Float,inspect
 
 # Создание engine и session_maker
 def create_path():
@@ -104,3 +104,13 @@ async def create_tables():
 async def delete_tables():
     async with engine.begin() as conn:
         await conn.run_sync(Model.metadata.drop_all)
+
+# Удаление и создание таблиц при запуске приложения
+async  def reload_db():
+    async  with engine.connect() as conn:
+        tables = await conn.run_sync(lambda conn: inspect(conn).get_table_names())
+        if not tables:
+            await delete_tables()
+            print("Таблицы удалены")
+            await create_tables()
+            print("Таблицы созданы")
