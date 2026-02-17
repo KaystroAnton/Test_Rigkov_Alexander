@@ -1,25 +1,42 @@
 import os
-import dotenv
+from dotenv import load_dotenv
 
 from fastapi import FastAPI
+from contextlib import asynccontextmanager
 import uvicorn
 
-app = FastAPI()
+from database import create_tables, delete_tables
+from router import routers
 
-@app.get("/", status_code = 200)
-def get_start():
-    return {"Initial": "Project is created"}
+
+# Удаление и создание таблиц при запуске приложения
+async  def reload_db():
+    await delete_tables()
+    print("Таблицы удалены")
+    await create_tables()
+    print("Таблицы созданы")
+
+@asynccontextmanager
+async  def lifespan(app: FastAPI):
+    #await reload_db() # Применить при первом запуске
+    yield
+    print("Выключение")
+
+
+app = FastAPI(title = "Test_Rigkov",
+              description = "test task",
+              docs_url = "/",
+              lifespan = lifespan)
+
+
+for rout in routers:
+    app.include_router(rout)
 
 if __name__ == "__main__":
-    dotenv.load_dotenv()
-    is_docker = os.getenv("DOCKER") # String
-    if is_docker == "Fasle":
-        host = "127.0.0.0"
-    elif is_docker == "True":
-        host = "0.0.0.0"
-    else:
-        host = os.getenv("PROD")
-        try:
-            uvicorn.run("main:app", host = "127.0.0.1")
-        except ValueError:
-            print(" Неверный IP или порт хоста")
+    load_dotenv()
+    host = os.getenv("IP")
+    port = int(os.getenv("PORT"))
+    try:
+        uvicorn.run("main:app", host = host, port = port, reload = True)
+    finally:
+        print("Приложение было запущено на хосте ", host)
