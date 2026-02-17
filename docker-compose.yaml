@@ -10,7 +10,7 @@ services: # контейнеры с которыми мы работаем
    depends_on: # прописывание зависимостей
       db: # backend зависит от базы данных
        condition: service_healthy # Условие при котором можно запускать наш контейнер backend
-   restart: on-failure
+   restart: always
    volumes:
     - ./app:/src/app
   db: # База данных
