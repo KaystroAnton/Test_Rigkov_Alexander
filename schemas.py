@@ -8,7 +8,7 @@ from pydantic import BaseModel, EmailStr, Field, ConfigDict, field_validator
 from pydantic_async_validation import async_field_validator, AsyncValidationModelMixin
 from enum import Enum
 
-from database import new_session, UserTable, ProductTable
+from database import sessions, UserTable, ProductTable
 
 
 # User models
@@ -138,7 +138,7 @@ class STransactionId(BaseModel):
 
 #help functions
 async  def get_user_by_id(user_id) -> SUser | None:
-    async  with new_session() as session:
+    async  with sessions() as session:
         query = select(UserTable).where(UserTable.id == user_id)
         result = await session.execute(query)
         user = result.scalars().first()
@@ -147,7 +147,7 @@ async  def get_user_by_id(user_id) -> SUser | None:
         return SUser.model_validate(user)
 
 async def get_product_by_id(product_id) -> SProduct | None:
-    async  with new_session() as session:
+    async  with sessions() as session:
         query = select(ProductTable).where(ProductTable.id == product_id)
         result = await session.execute(query)
         product = result.scalars().first()

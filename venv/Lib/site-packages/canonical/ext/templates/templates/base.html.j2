@@ -1,0 +1,629 @@
+{% if logo_url is not defined %}{% set logo_url=None %}{% endif %}
+{% set splash_image_url="https://static.webiam.id/shared/splash.jpg" %}
+{% if page_heading is not defined %}
+{% set page_heading=None %}
+{% endif %}
+<html dir="ltr">
+  <head>
+    <meta name="referrer" content="origin">
+    <meta
+      name="viewport"
+      content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <meta http-equiv="ScreenOrientation" content="autoRotate:disabled">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --background-color: #fff;
+        --container-height: 100vh;
+        --container-min-height: var(--container-height);
+        --gm-hairlinebutton-state-color: rgb(246,249,254);
+        --logo-height: 36px;
+        --ion-color-danger: #eb445a;
+        --ion-color-primary: #3880ff;
+        --ion-color-help: #666666;
+      }
+
+      .text-danger, strong-danger {
+        color: var(--ion-color-danger) !important;
+      }
+
+      .text-primary {
+        color: var(--ion-color-primary) !important;
+      }
+
+      .text-help {
+        color: var(--ion-color-help) !important;
+        font-size: 12px;
+        font-weight 400;
+        line-height: 20px;
+        margin-top: 0;
+      }
+
+      html {
+        overflow-y: hidden;
+        overflow-x: hidden;
+      }
+
+      .strong-primary strong {
+        color: var(--ion-color-primary) !important;
+      }
+
+      /* Ensure that there is a transparent background so that
+         we can see the image.
+      */
+      body, .main, .toolbar {
+        background-color: transparent;
+      }
+
+      .splash-overlay {
+        display: none;
+      }
+
+      body {
+        background: transparent;
+        direction: ltr;
+        font-size: 14px;
+        line-height: 1.4286;
+        margin: 0;
+        padding: 0;
+      }
+      
+      strong {
+        font-weight: bold;
+      }
+
+      h1 {
+        font-size: 24px;
+        font-weight: 400;
+        line-height: 32px;
+        margin: 0;
+      }
+
+      h2 {
+        color: rgb(32,33,36);
+        font-size: 16px;
+        font-weight: 400;
+        letter-spacing: 0.1px;
+        line-height: 1.5;
+        margin-bottom: 0px;
+        margin-top: 8px;
+      }
+
+      p {
+        margin: 0;
+      }
+
+      a, a:hover, a:visited {
+        color: #1a73e8;
+        cursor: pointer;
+        font-weight: 500;
+        text-decoration: none;
+        outline: none;
+      }
+
+      a {
+        text-decoration: none;
+        -webkit-border-radius: 4px;
+        border-radius: 4px;
+        color: rgb(26,115,232);
+        display: inline-block;
+        font-weight: 500;
+        letter-spacing: .25px;
+        margin: 0 -3px;
+        outline: 0;
+        padding: 0 3px;
+        position: relative;
+      }
+
+      a.btn, button.btn {
+        align-items: center;
+        background-color: var(--background-color);
+        border-color: var(--gm-hairlinebutton-outline-color,rgb(218,220,224));
+        border-radius: 4px;
+        border-style: solid;
+        border-width: 1px;
+        box-sizing: border-box;
+        color: var(--gm-hairlinebutton-ink-color,rgb(26,115,232));
+        cursor: pointer;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        letter-spacing: .0107142857em;
+        min-height: 44px;
+        padding: 0 23px 0 23px;
+
+        box-shadow: none;
+        font-family: "Google Sans",Roboto,Arial,sans-serif;
+        transition: border .28s cubic-bezier(.4,0,.2,1),box-shadow .28s cubic-bezier(.4,0,.2,1);
+      }
+
+      a.btn:hover:not(:disabled),
+      button.btn:hover:not(:disabled) {
+        background-color: var(--gm-hairlinebutton-state-color,rgb(26,115,232));
+        border-color: var(--gm-hairlinebutton-outline-color,rgb(218,220,224));
+        color: var(--gm-hairlinebutton-ink-color--stateful,rgb(23,78,166));
+      }
+
+      .btn::before {
+        transition: opacity 15ms linear,background-color 15ms linear;
+        z-index: 1;
+      }
+
+      .btn::after {
+        background-color: var(--gm-hairlinebutton-state-color,rgb(26,115,232));
+      }
+
+      .h-55 {
+        height: 55px;
+      }
+
+      .w-100 {
+        width: 100% !important;
+      }
+
+      .banner {
+        align-items: center;
+        bottom: 0px;
+        color: #fff;
+        display: none;
+        font-family: Nunito; sans-serif;
+        font-weight: 600;
+        font-size: 32px;
+        justify-content: end;
+        right: 0px;
+        opacity: 0.5;
+        padding: 22px;
+        position: absolute;
+      }
+
+      #view h1 {
+        color: rgb(32,33,36);
+        padding-bottom: 0;
+        padding-top: 16px;
+        font-family: Google Sans,Noto Sans Myanmar UI,arial,sans-serif;
+        font-size: 24px;
+        font-weight: 400;
+        line-height: 1.3333;
+        margin-bottom: 0;
+        margin-top: 0;
+        word-break: break-word;
+      }
+
+      #view .title {
+        text-align: center;
+      }
+
+      .section-wrapper {
+        margin: auto -24px;
+      }
+
+      section {
+        display: inline-block;
+        font-size: 14px;
+        padding: 24px 0 0;
+        vertical-align: top;
+        white-space: normal;
+        width: 100%;
+      }
+
+      section.action {
+        border: 0 solid transparent;
+        border-width: 0 24px;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+      }
+
+      .text {
+        margin: auto -24px;
+        padding-left: 24px;
+        padding-right: 24px;
+        margin-bottom: 16px;
+        margin-top: 10px;
+      }
+
+      .text p {
+        padding-bottom: 3px;
+        padding-top: 9px;
+      }
+
+      body, input, textarea, select, button {
+        color: rgb(32,33,36);
+        font-family: Roboto,"Noto Sans Myanmar UI",arial,sans-serif;
+      }
+
+      .main *, .main *:before, .main *:after {
+        -webkit-box-sizing: inherit;
+        box-sizing: inherit;
+      }
+
+      .container {
+        min-height: var(--container-min-height);
+        background: #fff;
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -webkit-flex-direction: column;
+        -webkit-flex-direction: column;
+        flex-direction: column;
+        max-width: 100%;
+        position: relative;
+        z-index: 2;
+      }
+
+      .inner {
+        -webkit-box-flex: 1;
+        -webkit-flex-grow: 1;
+        -webkit-box-flex: 1;
+        -webkit-flex-grow: 1;
+        box-flex: 1;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        overflow: hidden;
+        padding: 24px 24px 36px;
+      }
+
+      .inner .overlay {
+        background-color: #fff;
+        display: none;
+        height: calc(100% - var(--logo-height) - 24px);
+        left: 24px;
+        opacity: 0.75;
+        position: absolute;
+        top: calc(var(--logo-height) + 1px);
+        width: calc(100% - 48px);
+        z-index: 1000;
+      }
+
+      body.loading .inner .overlay {
+        display: block;
+      }
+
+      .inner .content {
+        flex-grow: 1;
+      }
+
+      nav button {
+        cursor: pointer;
+        box-sizing: border-box !important;
+      }
+
+      nav button:not(:last-child), nav a.button:not(:last-child) {
+        margin-bottom: 11px;
+      }
+
+      footer {
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: flex;
+        -webkit-flex-wrap: wrap;
+        flex-wrap: wrap;
+        font-size: 12px;
+        -webkit-justify-content: space-between;
+        justify-content: space-between;
+        line-height: 1.3333333;
+        padding: 0 24px;
+      }
+
+      .toolbar {
+        bottom: 0;
+        direction: ltr;
+        left: 0;
+        overflow: hidden;
+        position: absolute;
+        right: 0;
+        top: 0;
+        z-index: 1;
+      }
+
+      .logo-container {
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: flex;
+        height: 24px;
+        -webkit-box-pack: center;
+        -webkit-justify-content: center;
+        justify-content: center;
+      }
+
+      .logo-container.client-logo {
+        height: 50px;
+        margin-top: 33px;
+      }
+
+      .logo {
+        background-color: #fff;
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: flex;
+        -webkit-box-align: center;
+        -webkit-align-items: center;
+        align-items: center;
+        border-bottom: 1px solid #ccc;
+        height: var(--logo-height);
+        left: 0;
+        padding: 0 16px;
+        position: absolute;
+        right: 0;
+        top: 0;
+      }
+
+      .logo .heading {
+        color: rgb(95,99,104);
+        font-size: 14px;
+        height: 18px;
+        margin-top: -1px;
+      }
+
+      .logo .image {
+        height: 18px;
+        margin-right: 8px;
+      }
+
+      .logo .image img {
+        height: 100%;
+      }
+
+      button, a.button {
+        align-items: center;
+        box-sizing: border-box !important;
+        display: flex;
+        font-size: 14px;
+        justify-content: center;
+        padding: 11px;
+        width: 100%;
+      }
+
+      button .icon {
+        margin-right: 12px;
+      }
+
+      button .icon img {
+        height: 20px;
+        object-fit: cover;
+        width: 20px;
+      }
+
+      @media (min-width: 450px) {
+
+        html { 
+          background: url({{ splash_image_url }}) no-repeat center center fixed; 
+          -webkit-background-size: cover;
+          -moz-background-size: cover;
+          -o-background-size: cover;
+          background-size: cover;
+        }
+
+        .banner {
+          display: flex;
+          width: 33%;
+        }
+
+        .splash-overlay {
+          background-color: #000;
+          display: block;
+          height: 100%;
+          left: 0px;
+          opacity: 0.6;
+          position: absolute;
+          top: 0px;
+          width: 100%;
+        }
+
+        .inner {
+          padding: 48px 40px 36px;
+        }
+
+        footer {
+          padding-left: 40px;
+          padding-right: 40px;
+        }
+
+        .section-wrapper {
+          margin: auto -40px;
+        }
+
+        section.action {
+          border-left-width: 40px;
+          border-right-width: 40px;
+        }
+
+        .text {
+          margin: auto -40px;
+          padding-left: 40px;
+          padding-right: 40px;
+          margin-bottom: 16px;
+          margin-top: 10px;
+        }
+
+        button, a.button {
+          font-size: 16px;
+        }
+      }
+
+      @media (min-width: 601px) and (max-height: 600px) {
+        .inner {
+          height: 1px;
+          overflow-y: scroll;
+        }
+
+        #view h1 {
+          padding-top: 0px;
+        }
+
+        .h-55 {
+          height: 44px;
+        }
+
+        a.btn, button.btn {
+          margin: 0 auto;
+          max-width: 384px;
+        }
+
+        .text {
+          margin: 0 auto;
+          max-width: 512px;
+        }
+      }
+
+      @media (min-width: 601px) and (min-height: 601px) {
+        :root {
+          --container-min-height: 0;
+        }
+
+        .main {
+          display: -webkit-box;
+          display: -webkit-flex;
+          display: -webkit-box;
+          display: -webkit-flex;
+          display: flex;
+          -webkit-box-orient: vertical;
+          -webkit-box-direction: normal;
+          -webkit-flex-direction: column;
+          -webkit-flex-direction: column;
+          flex-direction: column;
+          min-height: 100vh;
+          position: relative;
+        }
+
+        .main::before, .main::after {
+          min-height: 30px;
+          content: "";
+          display: block;
+          -webkit-box-flex: 1;
+          -webkit-flex-grow: 1;
+          -webkit-box-flex: 1;
+          box-flex: 1;
+          -webkit-flex-grow: 1;
+          flex-grow: 1;
+          height: 24px;
+        }
+
+        .main::after {
+          content: "";
+          display: block;
+          -webkit-box-flex: 1;
+          -webkit-flex-grow: 1;
+          -webkit-box-flex: 1;
+          box-flex: 1;
+          -webkit-flex-grow: 1;
+          flex-grow: 1;
+          height: 24px;
+        }
+
+        .container {
+          -webkit-border-radius: 8px;
+          -webkit-flex-shrink: 0;
+          -webkit-transition: .2s;
+          border-radius: 8px;
+          border: 1px solid #dadce0;
+          display: block;
+          flex-shrink: 0;
+          margin: 0 auto;
+          transition: .2s;
+          width: 450px;
+        }
+
+        .inner {
+          height: auto;
+          min-height: 500px;
+          overflow-y: auto;
+          -webkit-transition: .2s;
+          -webkit-transition: .2s;
+          transition: .2s;
+        }
+
+        .logo-container.client-logo {
+          margin-top: 11px;
+        }
+
+        footer {
+          padding: 8px 0 0;
+          position: absolute;
+          width: 100%;
+        }
+      }
+
+      img.client-logo {
+        height: 50px;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="splash-overlay"></div>
+    <div class="banner">
+      <div>Secured by webidentity.id</div>
+    </div>
+    <div class="main">
+      <div class="container">
+        <div class="inner" role="presentation">
+          <div class="overlay"></div>
+          <div class="content">
+            {% block logo_container %}
+            <div class="logo-container{% if logo_url%} client-logo{% endif %}">
+              {% if logo_url %}
+              <img class="client-logo" src="{{ logo_url }}"/>
+              {% endif %}
+              <div class="logo">
+                <div class="image">
+                  <img src="https://static.webiam.id/shared/logo.png"/>
+                </div>
+                {% if page_heading %}
+                <div class="heading">{{ page_heading }}</div>
+                {% endif %}
+              </div>
+            </div>
+            {% endblock %}
+            <div id="view">
+              {% block heading %}
+              <div class="title">
+                <h1>{{ page_title }}</h1>
+                {% if page_subtitle is defined %}
+                <h2 class="strong-primary">{% markdown %}{{ page_subtitle }}{% endmarkdown %}</h2>
+                {% endif %}
+              </div>
+              {% endblock %}
+              <div id="root" class="section-wrapper">
+                {% block content %}
+                  <section class="action">
+                    <div class="text">{% block main_section %}{% endblock %}</div>
+                  </section>
+                {% endblock %}
+              </div>
+            </div>
+          </div>
+          <nav>
+          {% block navigation %}
+            {% if deny_url is defined and deny_url %}
+            <a class="btn w-100" href="{{ deny_url }}">
+            {% if deny_title is defined %}
+            {{ deny_title }}
+            {% else %}
+            {{ _("Cancel") }}
+            {% endif %}
+            </a>
+            {% endif %}
+          {% endblock %}
+          </nav>
+        </div>
+        <footer>
+          <div class="language-selector"></div>
+        </footer>
+      </div>
+      <div class="toolbar" aria-hidden="true"></div>
+    </div>
+    <script type="text/javascript" src="https://static.webiam.id/shared/ui-core.js"></script>
+    {% block closing_javascript %}{% endblock %}
+  </body>
+</html>

@@ -1,0 +1,17 @@
+{% extends "base.html.j2" %}
+{% set page_title=_("Probe detected") %}
+
+{% block content %}
+<section class="action">
+  <div class="text">
+    <p class="text-danger">{{ _("There is nothing to see here. Stop snooping.") }}</p>
+    <p>
+    </p>
+    <p>
+      {{ _("This behavior indicates malicious usage of our services.") }}
+      {{ _("Your IP address and any other metadata we could collect is forwarded to our security response team.") }}
+    </p>
+    <p><strong>{{ _("Incident ID") }}:</strong></br><tt>{{ incident_id }}</tt></p>
+  </div>
+</section>
+{% endblock %}

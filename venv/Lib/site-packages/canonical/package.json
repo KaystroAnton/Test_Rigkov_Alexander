@@ -1,0 +1,84 @@
+{
+  "description": "Common models and types for business applications",
+  "author": "Cochise Ruhulessin",
+  "author_email": "cochise.ruhulessin@unimatrixone.io",
+  "url": "https://gitlab.com/unimatrixone",
+  "licenses": "Proprietary",
+  "install_requires": [
+    "aiofiles",
+    "inflect>=6.0.2",
+    "iso3166",
+    "pydantic>2",
+    "email-validator",
+    "phonenumbers",
+    "pytz"
+  ],
+  "extras_require": {
+    "all": [
+      "aorta>=4.0.0alpha7",
+      "cryptography",
+      "fastapi<=0.105.0",
+      "google-api-python-client>=2.80.0",
+      "google-cloud-datastore>=2.13.2",
+      "google-cloud-iam>=2.13.0",
+      "google-cloud-logging",
+      "google-cloud-secret-manager>=2.10.0",
+      "google-cloud-storage>=2.7.0",
+      "httpx",
+      "iso3166>=2.1.1",
+      "Jinja2>=3.1.3",
+      "redis>=5.0.1",
+      "uvicorn",
+      "pyyaml"
+    ],
+    "config": [
+      "pyyaml",
+      "Jinja2>=3.1.3"
+    ],
+    "fastapi": [
+      "aorta>=4.0.0alpha7",
+      "fastapi<=0.105.0",
+      "httpx",
+      "uvicorn"
+    ],
+    "google": [
+      "google-api-python-client>=2.80.0",
+      "google-cloud-datastore>=2.13.2",
+      "google-cloud-iam>=2.13.0",
+      "google-cloud-logging",
+      "google-cloud-secret-manager>=2.10.0",
+      "google-cloud-storage>=2.7.0"
+    ],
+    "httpx": [
+      "httpx"
+    ],
+    "iso3166": [
+      "iso3166>=2.1.1"
+    ],
+    "jose": [
+      "cryptography"
+    ],
+    "redis": [
+      "redis>=5.0.1"
+    ],
+    "templates": [
+      "Jinja2>=3.1.3",
+      "jinja_markdown>=1.210911"
+    ]
+  },
+  "classifiers": [
+     "Development Status :: 4 - Beta",
+     "Environment :: Console",
+     "Environment :: Web Environment",
+     "Intended Audience :: Developers",
+     "License :: Other/Proprietary License",
+     "Operating System :: POSIX",
+     "Operating System :: POSIX :: Linux",
+     "Programming Language :: Python :: 3.11",
+     "Programming Language :: Python :: 3.12",
+     "Programming Language :: Python :: 3 :: Only",
+     "Topic :: Internet",
+     "Topic :: Office/Business",
+     "Topic :: Software Development :: Libraries"
+  ]
+}

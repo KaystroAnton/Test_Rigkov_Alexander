@@ -14,12 +14,26 @@ def create_path():
     os.getenv("DATABASE"), os.getenv("DB_USER"), os.getenv("DB_PASSWORD"),
     os.getenv("DB_NAME"),os.getenv("DB_DOMEN_NAME"),os.getenv("DB_PORT"))
     server_ip = f"{db_domen_name}:{db_port}"
+    return "sqlite+aiosqlite:///database.db" # for tests
     return f"{database}://{user}:{password}@{server_ip}/{name}"
 
 DATABASE_URL = create_path()
+DATABASE_TEST_URL = "sqlite+aiosqlite:///database_test.db"
 
+#Создание рабочей фабрики
 engine = create_async_engine(DATABASE_URL)
-new_session = async_sessionmaker(bind = engine, expire_on_commit=False)
+sessions = async_sessionmaker(bind = engine, expire_on_commit=False)
+#Создание тестовой фабрики
+mock_engine = create_async_engine(DATABASE_TEST_URL)
+mock_sessions = async_sessionmaker(bind = mock_engine, expire_on_commit=False)
+
+async def get_session():
+    async with  sessions() as session:
+        yield session
+
+async def get_mock_session():
+    async with  mock_sessions() as session:
+        yield session
 
 # Таблицы в базе данных
 

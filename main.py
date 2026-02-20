@@ -22,7 +22,6 @@ app = FastAPI(title = "Test_Rigkov",
               docs_url = "/",
               lifespan = lifespan)
 
-
 for rout in routers:
     app.include_router(rout)
 

@@ -1,7 +1,7 @@
+from typing import Annotated
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
-from database import (new_session,
-                      UserTable,
+from database import (UserTable,
                       ProductTable,
                       InventoryTable,
                       TransactionTable)
@@ -10,6 +10,7 @@ from schemas import (SUserAdd, SUser,
                      SInventoryAdd, SInventory,
                      Type,
                      STransactionAdd, STransaction)
+from fastapi import HTTPException
 
 
 
@@ -34,136 +35,136 @@ async def create_test_dataset():
 
 class UserRepository:
     @classmethod
-    async def add_one(cls, data: SUserAdd) -> int :
-        async with new_session() as session:
-            user_dict = data.model_dump() # Приводим к типу словаря
-            user = UserTable(**user_dict)
-            session.add(user)
-            await session.flush() # Добавляет поле id к user, от БД
-            await session.commit() # Закрывает сессию
-            await session.refresh(user)
-            return user.id
+    async def add_one(cls, data: SUserAdd, session) -> int :
+        user_dict = data.model_dump() # Приводим к типу словаря
+        user = UserTable(**user_dict)
+        session.add(user)
+        await session.flush() # Добавляет поле id к user, от БД
+        await session.commit() # Закрывает сессию
+        await session.refresh(user)
+        return user.id
 
     @classmethod
-    async def find_all(cls) -> list[SUser]:
-        async with new_session() as session:
-            query = select(UserTable)
-            result = await session.execute(query)
-            user_tables = result.scalars().all()
-            user_schemas = [SUser.model_validate(user) for user in user_tables]
-            return user_schemas
+    async def find_all(cls, session) -> list[SUser]:
+        query = select(UserTable)
+        result = await session.execute(query)
+        user_tables = result.scalars().all()
+        user_schemas = [SUser.model_validate(user) for user in user_tables] # можно и без него
+        return user_schemas
 
     @classmethod
-    async def find_all_user_inventories(cls, user_id) -> list[SInventory]:
-        async with new_session() as session:
-            await create_test_dataset()
-            query = select(UserTable).where(UserTable.id == user_id
-                                            ).options(selectinload(UserTable.inventories))
-            result = await session.execute(query)
-            user_tables = result.scalars().all()
-            inventory_schemas = []
-            for user in user_tables:
-                for inventory in user.inventories:
-                    inventory_schemas.append(SInventory.model_validate(inventory))
-            return inventory_schemas
+    async def find_all_user_inventories(cls, user_id, session) -> list[SInventory]:
+        query = select(UserTable).where(UserTable.id == user_id
+                                        ).options(selectinload(UserTable.inventories))
+        result = await session.execute(query)
+        user_tables = result.scalars().all()
+        inventory_schemas = []
+        for user in user_tables:
+            for inventory in user.inventories:
+                inventory_schemas.append(SInventory.model_validate(inventory))
+        return inventory_schemas
 
     @classmethod
-    async def find_all_user_transactions(cls, user_id ) -> list[STransaction]:
-        await create_test_dataset()
-        async with new_session() as session:
-            query = select(UserTable).where(UserTable.id == user_id
-                                                   ).options(selectinload(UserTable.transactions))
-            result = await session.execute(query)
-            user_tables = result.scalars().all()
-            transaction_schemas = []
-            for user in user_tables:
-                for transaction in user.transactions:
-                    transaction_schemas.append(STransaction.model_validate(transaction))
-            return transaction_schemas
+    async def find_all_user_transactions(cls, user_id, session ) -> list[STransaction]:
+        query = select(UserTable).where(UserTable.id == user_id
+                                                ).options(selectinload(UserTable.transactions))
+        result = await session.execute(query)
+        user_tables = result.scalars().all()
+        transaction_schemas = []
+        for user in user_tables:
+            for transaction in user.transactions:
+                transaction_schemas.append(STransaction.model_validate(transaction))
+        return transaction_schemas
+    
+    @classmethod
+    async  def find_one_by_id(cls, user_id:int, session) -> SProduct:
+        query = select(UserTable).where(UserTable.id == user_id)
+        result = await session.execute(query)
+        user_tables = result.scalars().one()
+        if user_tables is None:
+            raise HTTPException(status_code=404, detail="Product not found")
+        product_schemas = SUser.model_validate(user_tables)
+        return  product_schemas
 
 
 class ProductRepository:
 
     @classmethod
-    async  def add_one(cls, data: SProductAdd) -> int:
-        async  with new_session() as session:
-            product_dict = data.model_dump()
-            product = ProductTable(**product_dict)
-            session.add(product)
-            await session.commit()
-            await session.refresh(product)
-            return product.id
+    async  def add_one(cls, data: SProductAdd, session) -> int:
+        product_dict = data.model_dump()
+        product = ProductTable(**product_dict)
+        session.add(product)
+        await session.commit()
+        await session.refresh(product)
+        return product.id
 
     @classmethod
-    async  def find_all(cls) -> list[SProduct]:
-        async with new_session() as session:
-            query = select(ProductTable)
-            result = await session.execute(query)
-            product_tables = result.scalars().all()
-            product_schemas = [SProduct.model_validate(product) for product in product_tables]
-            return  product_schemas
+    async  def find_all(cls, session) -> list[SProduct]:
+        query = select(ProductTable)
+        result = await session.execute(query)
+        product_tables = result.scalars().all()
+        product_schemas = [SProduct.model_validate(product) for product in product_tables]
+        return  product_schemas
 
     @classmethod
-    async  def find_one_by_id(cls, product_id:int) -> SProduct:
-        async with new_session() as session:
-            query = select(ProductTable).where(ProductTable.id == product_id)
-            result = await session.execute(query)
-            product_tables = result.scalars().one()
-            product_schemas = SProduct.model_validate(product_tables)
-            return  product_schemas
+    async  def find_one_by_id(cls, product_id:int, session) -> SProduct:
+        query = select(ProductTable).where(ProductTable.id == product_id)
+        result = await session.execute(query)
+        product_tables = result.scalars().one_or_none()
+        print(product_tables)
+        if product_tables is None:
+            raise HTTPException(status_code=404, detail="Product not found")
+        product_schema = SProduct.model_validate(product_tables)
+        return  product_schema
 
     @classmethod
-    async def purchase_product(cls, product_id:int) -> SProduct:
-            product = await cls.find_one_by_id(product_id)
+    async def purchase_product(cls, product_id:int, session) -> SProduct:
+            product = await cls.find_one_by_id(product_id,session)
+            #TODO finish method purchase_product
             return product
-
 
 
 class InventoryRepository:
 
     @classmethod
-    async  def add_one(cls, data: SInventoryAdd) -> int:
-        async with new_session() as session:
-            await data.foreign_key_validator()
-            await  data.quantity_validator()
-            inventory_dict = data.model_dump()
-            inventory = InventoryTable(**inventory_dict)
-            session.add(inventory)
-            await session.commit()
-            await session.refresh(inventory)
-            return inventory.id
+    async  def add_one(cls, data: SInventoryAdd, session) -> int:
+        await data.foreign_key_validator()
+        await  data.quantity_validator()
+        inventory_dict = data.model_dump()
+        inventory = InventoryTable(**inventory_dict)
+        session.add(inventory)
+        await session.commit()
+        await session.refresh(inventory)
+        return inventory.id
 
     @classmethod
-    async def find_all(cls) -> list[SInventory]:
-        async with new_session() as session:
-            query = select(InventoryTable)
-            result = await session.execute(query)
-            inventory_tables = result.scalars().all()
-            inventory_schemas = [SInventory.model_validate(inventory) for inventory in inventory_tables]
-            return inventory_schemas
+    async def find_all(cls, session) -> list[SInventory]:
+        query = select(InventoryTable)
+        result = await session.execute(query)
+        inventory_tables = result.scalars().all()
+        inventory_schemas = [SInventory.model_validate(inventory) for inventory in inventory_tables]
+        return inventory_schemas
 
 
 class TransactionRepository:
 
     @classmethod
-    async def add_one(cls, data: STransactionAdd) -> int:
+    async def add_one(cls, data: STransactionAdd, session) -> int:
         await data.foreign_key_validator()
-        async  with new_session() as session:
-            transaction_dict = data.model_dump()
-            transaction = TransactionTable(**transaction_dict)
-            session.add(transaction)
-            await session.commit()
-            await session.refresh(transaction)
-            return transaction.id
+        transaction_dict = data.model_dump()
+        transaction = TransactionTable(**transaction_dict)
+        session.add(transaction)
+        await session.commit()
+        await session.refresh(transaction)
+        return transaction.id
 
     @classmethod
-    async  def get_all(cls) -> list[STransaction]:
-        async  with new_session() as session:
-            query = select(TransactionTable)
-            result = await session.execute(query)
-            transactions_tables = result.scalars().all()
-            transactions_schemas = [STransaction.model_validate(transaction) for transaction in transactions_tables]
-            return transactions_schemas
+    async  def get_all(cls, session) -> list[STransaction]:
+        query = select(TransactionTable)
+        result = await session.execute(query)
+        transactions_tables = result.scalars().all()
+        transactions_schemas = [STransaction.model_validate(transaction) for transaction in transactions_tables]
+        return transactions_schemas
 
 
 
