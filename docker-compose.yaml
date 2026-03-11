@@ -13,17 +13,19 @@ services: # контейнеры с которыми мы работаем
    restart: always
    volumes:
     - ./app:/src/app
-  db: # База данных
+  db: # База данных 
     image: postgres:18-alpine # Откуда мы берём данные
     container_name: shop-api-db
     ports:
-      - 5432:${DB_PORT}
+      - 5433:5432
     environment: # Переменные окружения в нашем случае берутся из файла .env
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_NAME}
+      - PGPORT=5432
+      - PGHOST=postgres
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=db
     healthcheck: # Проверка работоспособности контейнера
-      test: ["CMD-SHELL","pg_isready -d $$POSTGRES_DB -U $$POSTGRES_USER"]
+      test: ["CMD-SHELL","pg_isready -p 5433 -d $$POSTGRES_DB -U $$POSTGRES_USER"]
       interval: 5s
       timeout: 5s
       retries: 5
