@@ -41,5 +41,6 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
+print(settings.db.get_url())
 
 
